@@ -47,7 +47,7 @@ class RegisteredUserController extends Controller
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
             $filename = $file->getClientOriginalName();
-            $file->storeAs('avatars/' . $user->id, $filename, 'public');
+            $file->storeAs('avatars/' . $user->id, $filename, 's3');
             $user->update([
                 'avatar' => $filename,
             ]);
