@@ -14,7 +14,7 @@
                         @csrf
                         Your avatar:
                         <br />
-                        <img src="{{ Storage::disk('s3')->url('avatars/' . auth()->id() . '/' . auth()->user()->avatar) }}" />
+                        <img src="{{ Storage::url('avatars/' . auth()->id() . '/' . auth()->user()->avatar) }}" />
                         <br /><br />
                         <input type="file" name="avatar" />
                         <br /><br />

@@ -9,6 +9,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 
 class RegisteredUserController extends Controller
 {
@@ -36,6 +37,7 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:8',
+            'avatar' => 'file',
         ]);
 
         $user = User::create([
@@ -44,14 +46,22 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = $file->getClientOriginalName();
-            $file->storeAs('avatars/' . $user->id, $filename, 's3');
-            $user->update([
-                'avatar' => $filename,
-            ]);
-        }
+        $user->addMediaFromRequest('avatar')->toMediaCollection('avatars');
+
+
+//        if ($request->hasFile('avatar')) {
+//            $file = $request->file('avatar');
+//            $filename = $file->getClientOriginalName();
+//            $file->storeAs('avatars/' . $user->id, $filename);
+//
+//            Image::make(storage_path('app/public/avatars/' . $user->id . '/' . $filename))
+//                ->fit(50, 50)
+//                ->save(storage_path('app/public/avatars/' . $user->id . '/thumb-' . $filename));
+//
+//            $user->update([
+//                'avatar' => $filename,
+//            ]);
+//        }
 
         Auth::login($user);
 
