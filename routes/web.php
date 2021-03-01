@@ -20,6 +20,8 @@ Route::get('/', function () {
 
 Route::get('avatar/{userId}', [UserController::class, 'getAvatar']);
 
+Route::post('upload', [\App\Http\Controllers\UploadController::class, 'store']);
+
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/dashboard', function () {
         return view('dashboard');

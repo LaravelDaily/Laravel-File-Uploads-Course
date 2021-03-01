@@ -49,7 +49,7 @@
                 <div class="mt-4">
                     <x-label for="avatar" :value="__('Avatar')" />
 
-                    <input type="file" name="avatar">
+                    <input type="file" name="avatar" id="avatar">
                 </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -63,4 +63,19 @@
             </div>
         </form>
     </x-auth-card>
+
+    @section('scripts')
+        <script>
+            const inputElement = document.querySelector('input[id="avatar"]');
+            const pond = FilePond.create( inputElement );
+            FilePond.setOptions({
+                server: {
+                    url: '/upload',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            });
+        </script>
+    @endsection
 </x-guest-layout>
