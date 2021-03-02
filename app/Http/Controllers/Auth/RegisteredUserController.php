@@ -54,21 +54,6 @@ class RegisteredUserController extends Controller
             $temporaryFile->delete();
         }
 
-
-//        if ($request->hasFile('avatar')) {
-//            $file = $request->file('avatar');
-//            $filename = $file->getClientOriginalName();
-//            $file->storeAs('avatars/' . $user->id, $filename);
-//
-//            Image::make(storage_path('app/public/avatars/' . $user->id . '/' . $filename))
-//                ->fit(50, 50)
-//                ->save(storage_path('app/public/avatars/' . $user->id . '/thumb-' . $filename));
-//
-//            $user->update([
-//                'avatar' => $filename,
-//            ]);
-//        }
-
         Auth::login($user);
 
         event(new Registered($user));

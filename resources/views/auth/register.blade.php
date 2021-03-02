@@ -69,6 +69,8 @@
             const inputElement = document.querySelector('input[id="avatar"]');
             const pond = FilePond.create( inputElement );
             FilePond.setOptions({
+                chunkUploads: true,
+                chunkSize: 1000000,
                 server: {
                     url: '/upload',
                     headers: {
