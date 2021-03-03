@@ -21,7 +21,6 @@ Route::get('/', function () {
 Route::get('avatar/{userId}', [UserController::class, 'getAvatar']);
 
 Route::post('upload', [\App\Http\Controllers\UploadController::class, 'store']);
-Route::patch('upload', [\App\Http\Controllers\UploadController::class, 'update']);
 
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/dashboard', function () {

@@ -10,31 +10,20 @@ class UploadController extends Controller
 {
     public function store(Request $request)
     {
-        $folder = uniqid() . '-' . now()->timestamp;
-        mkdir(storage_path('app/public/avatars/tmp/' . $folder));
-        file_put_contents(storage_path('app/public/avatars/tmp/' . $folder . '/file.part'), '');
+        if ($request->hasFile('avatars')) {
+            $folder = uniqid() . '-' . now()->timestamp;
+            foreach ($request->file('avatars') as $file) {
+                $filename = $file->getClientOriginalName();
+                $file->storeAs('avatars/tmp/' . $folder, $filename);
 
-        return $folder;
-    }
-
-    public function update(Request $request)
-    {
-        $path = storage_path('app/public/avatars/tmp/' . $request->query('patch') . '/file.part');
-
-        File::append($path, $request->getContent());
-
-        if (filesize($path) == $request->header('Upload-Length')) {
-            $name = $request->header('Upload-Name');
-
-            File::move($path, storage_path('app/public/avatars/tmp/'. $request->query('patch') . '/' . $name));
-
-            TemporaryFile::create([
-                'folder' => $request->query('patch'),
-                'filename' => $name
-            ]);
+                TemporaryFile::create([
+                    'folder' => $folder,
+                    'filename' => $filename
+                ]);
+            }
+            return $folder;
         }
 
-        return response()->json(['uploaded' => true]);
+        return '';
     }
-
 }

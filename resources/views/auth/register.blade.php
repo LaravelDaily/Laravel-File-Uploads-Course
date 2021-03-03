@@ -49,7 +49,7 @@
                 <div class="mt-4">
                     <x-label for="avatar" :value="__('Avatar')" />
 
-                    <input type="file" name="avatar" id="avatar">
+                    <input type="file" name="avatars" id="avatars" multiple data-max-files="2">
                 </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -66,11 +66,9 @@
 
     @section('scripts')
         <script>
-            const inputElement = document.querySelector('input[id="avatar"]');
+            const inputElement = document.querySelector('input[id="avatars"]');
             const pond = FilePond.create( inputElement );
             FilePond.setOptions({
-                chunkUploads: true,
-                chunkSize: 1000000,
                 server: {
                     url: '/upload',
                     headers: {
