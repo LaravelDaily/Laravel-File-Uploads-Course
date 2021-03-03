@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TemporaryFile;
 use Illuminate\Http\Request;
+use File;
 
 class UploadController extends Controller
 {
@@ -11,32 +12,29 @@ class UploadController extends Controller
     {
         $folder = uniqid() . '-' . now()->timestamp;
         mkdir(storage_path('app/public/avatars/tmp/' . $folder));
+        file_put_contents(storage_path('app/public/avatars/tmp/' . $folder . '/file.part'), '');
+
         return $folder;
-
-        // Old version - if done without chunking
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = $file->getClientOriginalName();
-            $folder = uniqid() . '-' . now()->timestamp;
-            $file->storeAs('avatars/tmp/' . $folder, $filename);
-
-            TemporaryFile::create([
-                'folder' => $folder,
-                'filename' => $filename
-            ]);
-
-            return $folder;
-        }
-
-        return '';
     }
 
     public function update(Request $request)
     {
-        // TODO:
-        // - process the chunk and save it somewhere
-        // - somehow catch if it's the last chunk, and then combine
-        // - return success to the filepond
+        $path = storage_path('app/public/avatars/tmp/' . $request->query('patch') . '/file.part');
+
+        File::append($path, $request->getContent());
+
+        if (filesize($path) == $request->header('Upload-Length')) {
+            $name = $request->header('Upload-Name');
+
+            File::move($path, storage_path('app/public/avatars/tmp/'. $request->query('patch') . '/' . $name));
+
+            TemporaryFile::create([
+                'folder' => $request->query('patch'),
+                'filename' => $name
+            ]);
+        }
+
+        return response()->json(['uploaded' => true]);
     }
 
 }
