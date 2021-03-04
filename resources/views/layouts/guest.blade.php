@@ -16,6 +16,7 @@
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+        @livewireStyles
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">
@@ -24,5 +25,6 @@
 
         <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
         @yield('scripts')
+        @livewireScripts
     </body>
 </html>

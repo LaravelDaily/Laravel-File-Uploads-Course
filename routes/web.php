@@ -31,4 +31,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::put('profile', [UserController::class, 'update'])->name('profile.update');
 });
 
+Route::view('posts/create', 'posts.create');
+
 require __DIR__.'/auth.php';
